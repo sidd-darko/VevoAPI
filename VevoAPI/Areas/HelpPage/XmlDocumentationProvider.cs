@@ -6,7 +6,7 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Description;
 using System.Xml.XPath;
 
-namespace VevoAPI.Areas.HelpPage
+namespace Vevo.Areas.HelpPage
 {
     /// <summary>
     /// A custom <see cref="IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
@@ -64,6 +64,16 @@ namespace VevoAPI.Areas.HelpPage
             }
 
             return null;
+        }
+
+        public virtual string GetResponseDocumentation(HttpActionDescriptor actionDescriptor)
+        {
+          return null;
+        }
+
+        public virtual string GetDocumentation(HttpControllerDescriptor controllerDescriptor)
+        {
+          return null;
         }
 
         private XPathNavigator GetMethodNode(HttpActionDescriptor actionDescriptor)
