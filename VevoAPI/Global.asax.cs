@@ -6,6 +6,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using VevoAPI.Repository;
+using Microsoft.Practices.Unity;
 
 namespace VevoAPI
 {
@@ -22,6 +24,21 @@ namespace VevoAPI
       FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
       RouteConfig.RegisterRoutes(RouteTable.Routes);
       BundleConfig.RegisterBundles(BundleTable.Bundles);
+      
+      RegisterResolver();
+      RouteTable.Routes.MapHttpRoute(name: "DefaultRoute", routeTemplate: "api/{controller}/{id}", defaults: new { id = RouteParameter.Optional });
+      RouteTable.Routes.MapHttpRoute(name: "VideosRoute", routeTemplate: "api/artists/{id}/videos", defaults: new { controller = "videos", action = "Get" });
+
+      GlobalConfiguration.Configuration.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
+      GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
     }
+
+    private void RegisterResolver()
+    {
+      IUnityContainer container = new UnityContainer();
+      container.RegisterType<IVevoRepository, VevoRepository>(new Microsoft.Practices.Unity.HierarchicalLifetimeManager());
+      GlobalConfiguration.Configuration.DependencyResolver = new VevoAPI.Resolver.UnityResolver(container);
+    }
+
   }
 }
